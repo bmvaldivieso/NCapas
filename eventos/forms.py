@@ -1,7 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils import timezone
-from .models import Deporte, Evento, Participante
+from .models import Deporte, Evento, Participante, Equipo
 
 
 class DeporteForm(forms.ModelForm):
@@ -153,3 +153,54 @@ class EventoForm(forms.ModelForm):
                 raise ValidationError("No se pueden crear eventos en el pasado")
         return fecha
 
+
+
+class EquipoForm(forms.ModelForm):
+    """Formulario para crear y editar Equipos"""
+
+    class Meta:
+        model = Equipo
+        fields = ['nombre', 'deporte', 'ciudad', 'fecha_fundacion']
+        widgets = {
+            'nombre': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Ingrese el nombre del equipo'
+            }),
+            'deporte': forms.Select(attrs={
+                'class': 'form-control'
+            }),
+            'ciudad': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Ingrese la ciudad'
+            }),
+            'fecha_fundacion': forms.DateInput(attrs={
+                'class': 'form-control',
+                'type': 'date'
+            })
+        }
+        labels = {
+            'nombre': 'Nombre del Equipo',
+            'deporte': 'Deporte',
+            'ciudad': 'Ciudad',
+            'fecha_fundacion': 'Fecha de Fundación'
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['deporte'].queryset = Deporte.objects.all().order_by('nombre')
+
+    def clean_nombre(self):
+        nombre = self.cleaned_data.get('nombre')
+        if nombre:
+            nombre = nombre.strip()
+            if not nombre:
+                raise ValidationError("El nombre no puede estar vacío")
+        return nombre
+
+    def clean_ciudad(self):
+        ciudad = self.cleaned_data.get('ciudad')
+        if ciudad:
+            ciudad = ciudad.strip()
+            if not ciudad:
+                raise ValidationError("La ciudad no puede estar vacía")
+        return ciudad

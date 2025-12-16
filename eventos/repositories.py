@@ -1,6 +1,6 @@
 from typing import List, Optional
 from django.db.models import QuerySet
-from .models import Deporte, Evento, Participante, EventoParticipante
+from .models import Deporte, Evento, Participante, EventoParticipante, Equipo
 
 
 class DeporteRepository:
@@ -205,3 +205,59 @@ class EventoRepository:
         except EventoParticipante.DoesNotExist:
             return False
 
+
+class EquipoRepository:
+    """Repositorio para operaciones de acceso a datos de Equipo"""
+
+    @staticmethod
+    def get_all():
+        """Obtener todos los equipos"""
+        return Equipo.objects.select_related('deporte').all()
+
+    @staticmethod
+    def get_by_id(equipo_id: int):
+        """Obtener un equipo por su ID"""
+        try:
+            return Equipo.objects.select_related('deporte').get(pk=equipo_id)
+        except Equipo.DoesNotExist:
+            return None
+
+    @staticmethod
+    def get_by_deporte(deporte_id: int):
+        """Obtener equipos filtrados por deporte"""
+        return Equipo.objects.filter(deporte_id=deporte_id).select_related('deporte')
+
+    @staticmethod
+    def create(nombre: str, deporte_id: int, ciudad: str, fecha_fundacion=None):
+        """Crear un nuevo equipo"""
+        return Equipo.objects.create(
+            nombre=nombre,
+            deporte_id=deporte_id,
+            ciudad=ciudad,
+            fecha_fundacion=fecha_fundacion
+        )
+
+    @staticmethod
+    def update(equipo, nombre: str = None, deporte_id: int = None,
+               ciudad: str = None, fecha_fundacion=None):
+        """Actualizar un equipo existente"""
+        if nombre:
+            equipo.nombre = nombre
+        if deporte_id:
+            equipo.deporte_id = deporte_id
+        if ciudad:
+            equipo.ciudad = ciudad
+        if fecha_fundacion is not None:
+            equipo.fecha_fundacion = fecha_fundacion
+        equipo.save()
+        return equipo
+
+    @staticmethod
+    def delete(equipo_id: int) -> bool:
+        """Eliminar un equipo por su ID"""
+        try:
+            equipo = Equipo.objects.get(pk=equipo_id)
+            equipo.delete()
+            return True
+        except Equipo.DoesNotExist:
+            return False

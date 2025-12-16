@@ -1,0 +1,46 @@
+{% extends 'eventos/base.html' %}
+
+{% block title %}{% if object %}Editar{% else %}Crear{% endif %} Equipo - Sistema de Eventos Deportivos{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <h1>{% if object %}Editar Equipo{% else %}Crear Nuevo Equipo{% endif %}</h1>
+        <form method="post" class="mt-4">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="{{ form.nombre.id_for_label }}" class="form-label">{{ form.nombre.label }}</label>
+                {{ form.nombre }}
+                {% if form.nombre.errors %}
+                    <div class="text-danger">{{ form.nombre.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                <label for="{{ form.deporte.id_for_label }}" class="form-label">{{ form.deporte.label }}</label>
+                {{ form.deporte }}
+                {% if form.deporte.errors %}
+                    <div class="text-danger">{{ form.deporte.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                <label for="{{ form.ciudad.id_for_label }}" class="form-label">{{ form.ciudad.label }}</label>
+                {{ form.ciudad }}
+                {% if form.ciudad.errors %}
+                    <div class="text-danger">{{ form.ciudad.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                <label for="{{ form.fecha_fundacion.id_for_label }}" class="form-label">{{ form.fecha_fundacion.label }}</label>
+                {{ form.fecha_fundacion }}
+                {% if form.fecha_fundacion.errors %}
+                    <div class="text-danger">{{ form.fecha_fundacion.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a href="{% url 'eventos:lista_equipos' %}" class="btn btn-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-primary">{% if object %}Actualizar{% else %}Crear{% endif %}</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

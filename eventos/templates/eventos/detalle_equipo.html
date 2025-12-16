@@ -1,0 +1,36 @@
+{% extends 'eventos/base.html' %}
+
+{% block title %}Detalle de Equipo - Sistema de Eventos Deportivos{% endblock %}
+
+{% block content %}
+{% if equipo %}
+<div class="row">
+    <div class="col-md-8">
+        <h1>{{ equipo.nombre }}</h1>
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title">Información del Equipo</h5>
+                <p><strong>Deporte:</strong> {{ equipo.deporte.nombre }}</p>
+                <p><strong>Ciudad:</strong> {{ equipo.ciudad }}</p>
+                <p><strong>Fecha de Fundación:</strong> {{ equipo.fecha_fundacion|date:"d/m/Y"|default:"No registrada" }}</p>
+                <p><strong>Fecha de Creación:</strong> {{ equipo.fecha_creacion|date:"d/m/Y H:i" }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Acciones</h5>
+                <a href="{% url 'eventos:editar_equipo' equipo.pk %}" class="btn btn-warning w-100 mb-2">Editar</a>
+                <a href="{% url 'eventos:eliminar_equipo' equipo.pk %}" class="btn btn-danger w-100 mb-2">Eliminar</a>
+                <a href="{% url 'eventos:lista_equipos' %}" class="btn btn-secondary w-100">Volver a Lista</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="alert alert-warning">
+    Equipo no encontrado.
+</div>
+{% endif %}
+{% endblock %}

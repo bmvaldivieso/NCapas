@@ -3,7 +3,7 @@ from django.views.generic import ListView, CreateView, DetailView, UpdateView, D
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.core.exceptions import ValidationError
-from .models import Deporte, Evento, Participante
+from .models import Deporte, Evento, Participante, Equipo
 from .forms import DeporteForm, EventoForm, ParticipanteForm
 from .services import DeporteService, EventoService, ParticipanteService
 
@@ -321,3 +321,112 @@ def home(request):
         'eventos_futuros': EventoService.obtener_futuros()[:5],
     }
     return render(request, 'eventos/home.html', context)
+
+
+
+
+
+
+
+
+from .services import DeporteService, EventoService, ParticipanteService, EquipoService
+from .forms import DeporteForm, EventoForm, ParticipanteForm, EquipoForm
+
+# Agregar al final del archivo
+
+class EquipoListView(ListView):
+    """Vista para listar todos los equipos"""
+    model = Equipo
+    template_name = 'eventos/lista_equipos.html'
+    context_object_name = 'equipos'
+
+    def get_queryset(self):
+        return EquipoService.obtener_todos()
+
+
+class EquipoCreateView(CreateView):
+    """Vista para crear un nuevo equipo"""
+    model = Equipo
+    form_class = EquipoForm
+    template_name = 'eventos/crear_equipo.html'
+    success_url = reverse_lazy('eventos:lista_equipos')
+
+    def form_valid(self, form):
+        try:
+            nombre = form.cleaned_data['nombre']
+            deporte_id = form.cleaned_data['deporte'].id
+            ciudad = form.cleaned_data['ciudad']
+            fecha_fundacion = form.cleaned_data.get('fecha_fundacion')
+            
+            EquipoService.crear(
+                nombre=nombre,
+                deporte_id=deporte_id,
+                ciudad=ciudad,
+                fecha_fundacion=fecha_fundacion
+            )
+            messages.success(self.request, f'Equipo "{nombre}" creado exitosamente.')
+            return redirect(self.success_url)
+        except ValidationError as e:
+            messages.error(self.request, str(e))
+            return self.form_invalid(form)
+
+
+class EquipoDetailView(DetailView):
+    """Vista para ver los detalles de un equipo"""
+    model = Equipo
+    template_name = 'eventos/detalle_equipo.html'
+    context_object_name = 'equipo'
+
+    def get_object(self):
+        equipo_id = self.kwargs.get('pk')
+        equipo = EquipoService.obtener_por_id(equipo_id)
+        if not equipo:
+            messages.error(self.request, 'Equipo no encontrado.')
+            return None
+        return equipo
+
+
+class EquipoUpdateView(UpdateView):
+    """Vista para actualizar un equipo"""
+    model = Equipo
+    form_class = EquipoForm
+    template_name = 'eventos/crear_equipo.html'
+    success_url = reverse_lazy('eventos:lista_equipos')
+
+    def form_valid(self, form):
+        try:
+            equipo_id = self.kwargs.get('pk')
+            nombre = form.cleaned_data.get('nombre')
+            deporte_id = form.cleaned_data.get('deporte').id if form.cleaned_data.get('deporte') else None
+            ciudad = form.cleaned_data.get('ciudad')
+            fecha_fundacion = form.cleaned_data.get('fecha_fundacion')
+            
+            EquipoService.actualizar(
+                equipo_id,
+                nombre=nombre,
+                deporte_id=deporte_id,
+                ciudad=ciudad,
+                fecha_fundacion=fecha_fundacion
+            )
+            messages.success(self.request, 'Equipo actualizado exitosamente.')
+            return redirect(self.success_url)
+        except ValidationError as e:
+            messages.error(self.request, str(e))
+            return self.form_invalid(form)
+
+
+class EquipoDeleteView(DeleteView):
+    """Vista para eliminar un equipo"""
+    model = Equipo
+    template_name = 'eventos/eliminar_equipo.html'
+    success_url = reverse_lazy('eventos:lista_equipos')
+
+    def delete(self, request, *args, **kwargs):
+        try:
+            equipo_id = self.kwargs.get('pk')
+            EquipoService.eliminar(equipo_id)
+            messages.success(self.request, 'Equipo eliminado exitosamente.')
+            return redirect(self.success_url)
+        except ValidationError as e:
+            messages.error(self.request, str(e))
+            return redirect(self.success_url)

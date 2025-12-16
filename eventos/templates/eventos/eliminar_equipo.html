@@ -1,0 +1,27 @@
+{% extends 'eventos/base.html' %}
+
+{% block title %}Eliminar Equipo - Sistema de Eventos Deportivos{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">¿Está seguro de eliminar este equipo?</h2>
+                <p class="card-text">
+                    <strong>Nombre:</strong> {{ object.nombre }}<br>
+                    <strong>Deporte:</strong> {{ object.deporte.nombre }}<br>
+                    <strong>Ciudad:</strong> {{ object.ciudad }}
+                </p>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'eventos:lista_equipos' %}" class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

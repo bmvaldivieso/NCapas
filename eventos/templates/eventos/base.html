@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
@@ -21,7 +23,8 @@
                         <a class="nav-link" href="{% url 'eventos:home' %}">Inicio</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="deportesDropdown" role="button" data-bs-toggle="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="deportesDropdown" role="button"
+                            data-bs-toggle="dropdown">
                             Deportes
                         </a>
                         <ul class="dropdown-menu">
@@ -30,7 +33,8 @@
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="eventosDropdown" role="button" data-bs-toggle="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="eventosDropdown" role="button"
+                            data-bs-toggle="dropdown">
                             Eventos
                         </a>
                         <ul class="dropdown-menu">
@@ -39,7 +43,8 @@
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="participantesDropdown" role="button" data-bs-toggle="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="participantesDropdown" role="button"
+                            data-bs-toggle="dropdown">
                             Participantes
                         </a>
                         <ul class="dropdown-menu">
@@ -47,6 +52,21 @@
                             <li><a class="dropdown-item" href="{% url 'eventos:crear_participante' %}">Crear</a></li>
                         </ul>
                     </li>
+
+
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="equiposDropdown" role="button"
+                            data-bs-toggle="dropdown">
+                            Equipos
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'eventos:lista_equipos' %}">Listar</a></li>
+                            <li><a class="dropdown-item" href="{% url 'eventos:crear_equipo' %}">Crear</a></li>
+                        </ul>
+                    </li>
+
+                    
                 </ul>
             </div>
         </div>
@@ -54,12 +74,12 @@
 
     <main class="container my-4">
         {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            {% endfor %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
         {% endif %}
 
         {% block content %}
@@ -74,5 +94,5 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html>
 
+</html>
