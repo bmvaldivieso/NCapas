@@ -212,7 +212,7 @@ El proyecto incluye un pipeline de GitHub Actions (`.github/workflows/ci.yml`) q
 
 ## Autor
 
-Sistema desarrollado como práctica de Arquitectura de Software - Arquitectura en 3 Capas
+@xavicrip
 
 ## Licencia
 
